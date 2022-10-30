@@ -8,8 +8,8 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
 # AARNAV'S CODE:
 
-def main(location, key):
-    apikey = key
+def main(loc_key_dict):
+    apikey = loc_key_dict.get("key")
     gmaps = googlemaps.Client(key=apikey)
     namelist = []
     hourslist = []
@@ -68,7 +68,7 @@ def main(location, key):
 
             countervar += 1
 
-    location = gmaps.geocode(location)[0] #like -33.8670522%2C151.1957362
+    location = gmaps.geocode(loc_key_dict.get("location"))[0] #like -33.8670522%2C151.1957362
     coords = str(location.get("geometry").get("bounds").get(("northeast")).get("lat")) + "%2C" + str(location.get("geometry").get("bounds").get(("northeast")).get("lng"))
 
     radius = "16000"
