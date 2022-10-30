@@ -34,7 +34,7 @@ recommend(dat,name,choose)
 
 # AARNAV'S CODE:
 
-import types, googlemaps, requests, json, time
+import googlemaps, requests, json, time
 
 apikey = "AIzaSyBLC-qqM7M1Y9JIoJKbijKmHVD04Z4x9Mk"
 gmaps = googlemaps.Client(key=apikey)
@@ -45,6 +45,7 @@ ratinglist = []
 userratinglist = []
 typeslist = []
 vicinitylist = []
+reviewlist = []
 
 def getLocations(url, namelist, hourslist, photolist, ratinglist, userratinglist, typeslist, vicinitylist):
     payload = {}
@@ -69,7 +70,11 @@ def getLocations(url, namelist, hourslist, photolist, ratinglist, userratinglist
         typeslist.append(types)
         vicinitylist.append(list(jdata["results"])[countervar].get("vicinity"))
 
-        url = "https://maps.googleapis.com/maps/api/place/details/json?place_id=ChIJN1t_tDeuEmsRUsoyG83frY4&fields=name%2Crating%2Cformatted_phone_number&key=YOUR_API_KEY"
+        url = "https://maps.googleapis.com/maps/api/place/details/json?place_id=" + list(jdata["results"])[countervar].get("place_id") + "&fields=name,rating,formatted_phone_number,reviews&key=" + apikey
+        payload={}
+        headers = {}
+        reviews = list(json.loads(requests.request("GET", url, headers=headers, data=payload).text)['result'].get("reviews"))
+        reviewlist.append(reviews[0].get("text"))
 
         #print(name, types)
 
@@ -94,3 +99,5 @@ if len(list(jdata["results"])) == 20:
     url2 = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + coords + "&radius=" + radius + "&type=" + type + "&keyword=" + keyword + "&key=" + apikey + "&pagetoken=" + jdata.get("next_page_token")
     time.sleep(1)
     getLocations(url2, namelist, hourslist, photolist, ratinglist, userratinglist, typeslist, vicinitylist)
+
+print(reviewlist)
