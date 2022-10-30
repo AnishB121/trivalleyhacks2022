@@ -9,12 +9,9 @@ import time
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
 # AARNAV'S CODE:
-<<<<<<< HEAD
 
 import googlemaps, requests, json, time
 
-=======
->>>>>>> 88162aeefe8c29c69faf6d0927648220f73f2c42
 apikey = "AIzaSyBLC-qqM7M1Y9JIoJKbijKmHVD04Z4x9Mk"
 gmaps = googlemaps.Client(key=apikey)
 namelist = []
