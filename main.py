@@ -31,3 +31,66 @@ dat =["Long-running drive-through offering milk, cheese, ice cream & other dairy
 name = ['meadowlark dairy','oyo','main street brewery','sabio on main','primrose bakery']
 choose = random.choice(name)
 recommend(dat,name,choose)
+
+# AARNAV'S CODE:
+
+import types, googlemaps, requests, json, time
+
+apikey = "AIzaSyBLC-qqM7M1Y9JIoJKbijKmHVD04Z4x9Mk"
+gmaps = googlemaps.Client(key=apikey)
+namelist = []
+hourslist = []
+photolist = []
+ratinglist = []
+userratinglist = []
+typeslist = []
+vicinitylist = []
+
+def getLocations(url, namelist, hourslist, photolist, ratinglist, userratinglist, typeslist, vicinitylist):
+    payload = {}
+    headers = {}
+    response = requests.request("GET", url, headers=headers, data=payload)
+    jdata = json.loads(response.text)
+    countervar = 0
+
+    print("length:")
+    print(len(list(jdata["results"])))
+    print("\n")
+    while countervar <= len(list(jdata["results"])) - 1:        
+        
+        name = list(jdata["results"])[countervar].get("name")
+        types = list(jdata["results"])[countervar].get("types")
+
+        namelist.append(name)
+        hourslist.append(list(jdata["results"])[countervar].get("opening_hours"))
+        photolist.append(list(jdata["results"])[countervar].get("photos"))
+        ratinglist.append(list(jdata["results"])[countervar].get("rating"))
+        userratinglist.append(list(jdata["results"])[countervar].get("user_ratings_total"))
+        typeslist.append(types)
+        vicinitylist.append(list(jdata["results"])[countervar].get("vicinity"))
+
+        url = "https://maps.googleapis.com/maps/api/place/details/json?place_id=ChIJN1t_tDeuEmsRUsoyG83frY4&fields=name%2Crating%2Cformatted_phone_number&key=YOUR_API_KEY"
+
+        #print(name, types)
+
+        countervar += 1
+
+location = gmaps.geocode(input("city:\n\t"))[0] #like -33.8670522%2C151.1957362
+coords = str(location.get("geometry").get("bounds").get(("northeast")).get("lat")) + "%2C" + str(location.get("geometry").get("bounds").get(("northeast")).get("lng"))
+
+radius = "50000"
+type = input("what type of business?\n\t")
+keyword = input("keywords:\n\t")
+
+url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + coords + "&radius=" + radius + "&type=" + type + "&keyword=" + keyword + "&key=" + apikey
+getLocations(url, namelist, hourslist, photolist, ratinglist, userratinglist, typeslist, vicinitylist)
+
+headers = {}
+payload ={}
+response = requests.request("GET", url, headers=headers, data=payload)
+jdata = json.loads(response.text)
+
+if len(list(jdata["results"])) == 20:
+    url2 = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + coords + "&radius=" + radius + "&type=" + type + "&keyword=" + keyword + "&key=" + apikey + "&pagetoken=" + jdata.get("next_page_token")
+    time.sleep(1)
+    getLocations(url2, namelist, hourslist, photolist, ratinglist, userratinglist, typeslist, vicinitylist)
