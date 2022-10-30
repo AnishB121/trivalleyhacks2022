@@ -21,11 +21,8 @@ ratinglist = []
 userratinglist = []
 typeslist = []
 vicinitylist = []
-<<<<<<< HEAD
-reviewlist = []
 
-=======
->>>>>>> 88162aeefe8c29c69faf6d0927648220f73f2c42
+reviewlist=[]
 def getLocations(url, namelist, hourslist, photolist, ratinglist, userratinglist, typeslist, vicinitylist):
     payload = {}
     headers = {}
@@ -78,10 +75,6 @@ if len(list(jdata["results"])) == 20:
     url2 = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + coords + "&radius=" + radius + "&type=" + type + "&keyword=" + keyword + "&key=" + apikey + "&pagetoken=" + jdata.get("next_page_token")
     time.sleep(1)
     getLocations(url2, namelist, hourslist, photolist, ratinglist, userratinglist, typeslist, vicinitylist)
-<<<<<<< HEAD
-
-print(reviewlist)
-=======
 def recommend(data,names,choice):
  vector = TfidfVectorizer(stop_words='english')
  vec_matrix = vector.fit_transform(data)
@@ -110,4 +103,3 @@ dat = []
 name = namelist
 choose = random.choice(name)
 recommend(dat,name,choose)
->>>>>>> 88162aeefe8c29c69faf6d0927648220f73f2c42
